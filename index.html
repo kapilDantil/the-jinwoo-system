@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JINWOO SYSTEM</title>
+
+<style>
+*{box-sizing:border-box}
+
+:root{
+  --bg:#020611;
+  --panel:#061323;
+  --line:#00cfff;
+  --cyan:#5eeaff;
+  --blue:#168cff;
+  --purple:#b66cff;
+  --green:#36e59a;
+  --gold:#ffbf3f;
+  --text:#c9f4ff;
+  --muted:#7193a6;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  padding:18px;
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(circle at 50% 0%,#0b3152 0,transparent 35%),
+    radial-gradient(circle at 100% 100%,#24134b 0,transparent 35%),
+    #020611;
+}
+
+button,input,select{font:inherit}
+
+button{
+  border:0;
+  cursor:pointer;
+  color:#00131b;
+  font-weight:bold;
+  padding:10px 14px;
+  border-radius:7px;
+  background:linear-gradient(90deg,#00bfe8,#42eaff);
+  transition:.2s;
+}
+button:hover{transform:translateY(-1px);filter:brightness(1.12)}
+button.secondary{background:#102b43;color:#bdefff;border:1px solid #087c9e}
+button.danger{background:#4a1424;color:#ffdbe2;border:1px solid #a52e48}
+button.complete{background:#36d98a;color:#001b10}
+
+.system{max-width:1250px;margin:auto}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:14px 20px;
+  margin-bottom:16px;
+  border:1px solid var(--line);
+  background:rgba(3,15,31,.94);
+  box-shadow:0 0 25px rgba(0,207,255,.18),inset 0 0 30px rgba(0,207,255,.03);
+  clip-path:polygon(0 0,98% 0,100% 25%,100% 100%,2% 100%,0 75%);
+}
+
+.logo{
+  font-size:28px;
+  font-weight:bold;
+  letter-spacing:5px;
+  color:#fff;
+  text-shadow:0 0 16px #00d9ff;
+}
+.nav{
+  color:#57dfff;
+  font-size:12px;
+  letter-spacing:2px;
+}
+.level-mini{
+  min-width:220px;
+  padding:8px 14px;
+  border-left:1px solid #087c9e;
+}
+.level-mini strong{font-size:19px;color:#fff}
+.mini-xp{
+  height:7px;
+  margin-top:7px;
+  background:#081827;
+  border:1px solid #087c9e;
+  overflow:hidden;
+}
+.mini-xp div{
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#168cff,#5eeaff);
+  box-shadow:0 0 12px #00eaff;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 270px;
+  gap:16px;
+}
+
+.panel{
+  background:rgba(3,18,36,.94);
+  border:1px solid #087c9e;
+  box-shadow:0 0 20px rgba(0,207,255,.12),inset 0 0 30px rgba(0,207,255,.025);
+  padding:16px;
+  margin-bottom:16px;
+  border-radius:10px;
+}
+
+.panel-title{
+  color:var(--cyan);
+  font-weight:bold;
+  font-size:18px;
+  letter-spacing:2px;
+  margin-bottom:12px;
+}
+
+.timetable-wrap{
+  overflow-x:auto;
+  padding-bottom:4px;
+}
+
+.timetable{
+  min-width:980px;
+  display:grid;
+  grid-template-columns:150px repeat(7,minmax(105px,1fr));
+  grid-auto-rows:minmax(82px,auto);
+  gap:3px;
+}
+
+.cell{
+  min-width:0;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:8px;
+  background:#041021;
+  border:1px solid #0b4c69;
+  color:#a9eaff;
+  overflow:hidden;
+}
+
+.header-cell{
+  min-height:74px;
+  flex-direction:column;
+  color:#62eaff;
+  font-weight:bold;
+  background:linear-gradient(180deg,#071c34,#041020);
+}
+.header-cell small{
+  margin-top:6px;
+  color:#54bde2;
+  font-size:10px;
+  font-weight:normal;
+}
+
+.day-cell{
+  justify-content:flex-start;
+  padding-left:15px;
+  text-align:left;
+  color:#fff;
+  font-weight:bold;
+  letter-spacing:1px;
+  background:linear-gradient(90deg,#071a2d,#041021);
+  border-left:3px solid #00d8ff;
+}
+
+.subject{
+  border-color:#168cff;
+  background:linear-gradient(145deg,#062344,#041323);
+  box-shadow:inset 0 0 15px rgba(0,153,255,.08);
+  color:#bfefff;
+  font-weight:bold;
+}
+.subject::after{
+  content:"";
+  position:absolute;
+  width:35px;
+  height:1px;
+  background:#5eeaff;
+  top:7px;
+  right:8px;
+  box-shadow:0 0 7px #5eeaff;
+}
+.subject.lab{
+  color:#d09cff;
+  border-color:#a84cff;
+  background:linear-gradient(145deg,#211044,#080d20);
+}
+.subject.sports{
+  color:#ffd06b;
+  border-color:#d89516;
+  background:linear-gradient(145deg,#39260a,#100d06);
+}
+.subject.play{
+  color:#63ffe0;
+  border-color:#00bda2;
+  background:linear-gradient(145deg,#063a39,#061a20);
+}
+.subject.library{
+  color:#bcd5ff;
+  border-color:#4779b9;
+}
+.subject.seminar{
+  color:#69e8ff;
+  border-color:#008fba;
+}
+
+.lunch{
+  grid-column:5;
+  grid-row:2 / span 6;
+  writing-mode:vertical-rl;
+  transform:rotate(180deg);
+  letter-spacing:7px;
+  font-size:18px;
+  font-weight:bold;
+  color:#5eeaff;
+  background:
+    linear-gradient(180deg,#06172b,#031020),
+    repeating-linear-gradient(0deg,transparent 0 20px,rgba(0,207,255,.04) 21px 22px);
+  border:1px solid #00bfff;
+  box-shadow:inset 0 0 25px rgba(0,207,255,.08),0 0 15px rgba(0,207,255,.08);
+}
+
+.session-card{
+  padding:12px;
+  background:#041021;
+  border:1px solid #087c9e;
+  margin-top:10px;
+  border-radius:8px;
+}
+.session-card strong{color:#fff}
+.session-meta{font-size:11px;color:var(--muted);margin-top:5px}
+.session-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:8px;
+}
+input,select{
+  width:100%;
+  padding:10px;
+  color:#fff;
+  background:#061322;
+  border:1px solid #087c9e;
+  border-radius:7px;
+  outline:none;
+}
+input:focus,select:focus{border-color:#5eeaff;box-shadow:0 0 10px rgba(0,207,255,.15)}
+
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.stat{
+  padding:12px;
+  display:flex;
+  justify-content:space-between;
+  border:1px solid #087c9e;
+  background:#061322;
+  border-radius:7px;
+}
+.stat b{color:#fff}
+
+.quest{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  margin-top:9px;
+  background:#061322;
+  border:1px solid #087c9e;
+  border-radius:8px;
+}
+.quest.completed{opacity:.55;border-color:#36d98a}
+.quest-name{flex:1}
+.quest-meta{font-size:11px;color:var(--muted);margin-top:4px}
+.task-actions{display:flex;gap:6px;flex-wrap:wrap}
+.completed-mark{color:#36d98a;font-weight:bold}
+.empty{text-align:center;color:var(--muted);padding:18px}
+
+.side-title{
+  color:#5eeaff;
+  font-weight:bold;
+  letter-spacing:1px;
+  margin-bottom:10px;
+}
+.metric{
+  display:flex;
+  justify-content:space-between;
+  padding:11px 0;
+  border-bottom:1px solid #12384c;
+}
+.metric:last-child{border-bottom:0}
+.metric span:last-child{color:#fff;font-weight:bold}
+
+.notice{
+  position:fixed;
+  z-index:100;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  display:none;
+  min-width:290px;
+  padding:14px 20px;
+  text-align:center;
+  color:#fff;
+  background:#031525;
+  border:1px solid #00eaff;
+  border-radius:8px;
+  box-shadow:0 0 25px #00cfff;
+  font-weight:bold;
+}
+
+.levelup{
+  position:fixed;
+  inset:0;
+  z-index:90;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,5,15,.86);
+  backdrop-filter:blur(6px);
+}
+.levelup-box{
+  width:100%;
+  max-width:520px;
+  padding:34px;
+  text-align:center;
+  background:linear-gradient(145deg,#061b31,#080c20);
+  border:1px solid #65eaff;
+  border-radius:15px;
+  box-shadow:0 0 60px rgba(0,220,255,.3);
+}
+.levelup-box h2{
+  color:#65eaff;
+  letter-spacing:4px;
+  text-shadow:0 0 20px #00cfff;
+}
+.level-number{font-size:55px;color:#fff;font-weight:bold;margin:10px}
+.reward-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0}
+.reward{padding:12px;background:#061322;border:1px solid #087c9e;border-radius:7px}
+.reward b{display:block;color:#62ffb0;font-size:20px;margin-top:4px}
+
+.footer{
+  padding:12px 4px;
+  text-align:center;
+  color:#327e9a;
+  font-size:10px;
+  letter-spacing:4px;
+}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr 1fr}
+  .topbar{flex-wrap:wrap}
+  .level-mini{margin-left:auto}
+}
+@media(max-width:600px){
+  body{padding:8px}
+  .logo{font-size:22px}
+  .nav{display:none}
+  .form-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr}
+  .quest{align-items:flex-start;flex-direction:column}
+  .task-actions{width:100%}
+  .task-actions button{flex:1}
+}
+</style>
+</head>
+
+<body>
+
+<div class="notice" id="notice"></div>
+
+<div class="levelup" id="levelUpScreen">
+  <div class="levelup-box">
+    <div style="color:#7193a6;font-size:12px">SYSTEM NOTIFICATION</div>
+    <h2>LEVEL UP</h2>
+    <div class="level-number" id="newLevel">2</div>
+    <div>You have become stronger.</div>
+
+    <div class="reward-list">
+      <div class="reward">💪 Strength<b>+1</b></div>
+      <div class="reward">⚡ Agility<b>+1</b></div>
+      <div class="reward">🧠 Intelligence<b>+1</b></div>
+      <div class="reward">❤️ Endurance<b>+1</b></div>
+    </div>
+
+    <button onclick="closeLevelUp()">CONTINUE</button>
+  </div>
+</div>
+
+<div class="system">
+
+  <header class="topbar">
+    <div>
+      <div class="logo">JINWOO SYSTEM</div>
+      <div class="nav">PRODUCTIVITY • FOCUS • GROWTH</div>
+    </div>
+
+    <div class="level-mini">
+      <strong>LV. <span id="miniLevel">1</span></strong>
+      <div class="mini-xp"><div id="miniXp"></div></div>
+      <div style="font-size:11px;margin-top:5px;color:#7193a6">
+        XP <span id="miniXpText">0 / 100</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <main>
+
+      <!-- TIMETABLE -->
+      <section class="panel">
+        <div class="panel-title">▣ WEEKLY TIMETABLE</div>
+
+        <div class="timetable-wrap">
+          <div class="timetable">
+
+            <!-- Header -->
+            <div class="cell header-cell">DAY / PERIOD</div>
+            <div class="cell header-cell">I<small>9:30 - 10:20</small></div>
+            <div class="cell header-cell">II<small>10:20 - 11:10</small></div>
+            <div class="cell header-cell">III<small>11:10 - 12:00</small></div>
+            <div class="cell header-cell">LUNCH<small>12:00 - 12:40</small></div>
+            <div class="cell header-cell">IV<small>12:40 - 1:30</small></div>
+            <div class="cell header-cell">V<small>1:30 - 2:20</small></div>
+            <div class="cell header-cell">VI<small>2:30 - 3:10</small></div>
+            <div class="cell header-cell">VII<small>3:10 - 4:00</small></div>
+
+            <!-- Monday -->
+            <div class="cell day-cell">MONDAY</div>
+            <div class="cell subject">📖 ENG</div>
+            <div class="cell subject">▣ MAT</div>
+            <div class="cell subject lab">⚗ CHE</div>
+            <div class="cell lunch">LUNCH</div>
+            <div class="cell subject lab" style="grid-column:6 / span 2">⚗ LAB</div>
+            <div class="cell subject play">🎮 PLAY</div>
+
+            <!-- Tuesday -->
+            <div class="cell day-cell">TUESDAY</div>
+            <div class="cell subject lab" style="grid-column:2 / span 3">⚗ LAB</div>
+            <div class="cell subject">📖 ENG</div>
+            <div class="cell subject lab">⚗ CHE</div>
+            <div class="cell subject">▣ MAT</div>
+            <div class="cell subject sports">🏃 SPORTS</div>
+
+            <!-- Wednesday -->
+            <div class="cell day-cell">WEDNESDAY</div>
+            <div class="cell subject">▣ MAT</div>
+            <div class="cell subject">⚛ PHY</div>
+            <div class="cell subject">📖 ENG</div>
+            <div class="cell subject lab" style="grid-column:6 / span 3">⚗ CHE + 📚 LIBRARY</div>
+
+            <!-- Thursday -->
+            <div class="cell day-cell">THURSDAY</div>
+            <div class="cell subject">⚛ PHY</div>
+            <div class="cell subject">📖 ENG</div>
+            <div class="cell subject lab">⚗ CHE</div>
+            <div class="cell subject lab" style="grid-column:6 / span 2">⚗ LAB</div>
+            <div class="cell subject">▣ MAT</div>
+
+            <!-- Friday -->
+            <div class="cell day-cell">FRIDAY</div>
+            <div class="cell subject lab" style="grid-column:2 / span 3">⚗ LAB</div>
+            <div class="cell subject">▣ MAT</div>
+            <div class="cell subject lab">⚗ CHE</div>
+            <div class="cell subject">📖 ENG</div>
+            <div class="cell subject">⚛ PHY</div>
+
+            <!-- Saturday -->
+            <div class="cell day-cell">SATURDAY</div>
+            <div class="cell subject">📖 ENG</div>
+            <div class="cell subject lab">⚗ CHE</div>
+            <div class="cell subject">▣ MAT</div>
+            <div class="cell subject seminar" style="grid-column:6 / span 2">👥 SEMINAR</div>
+            <div class="cell subject sports">🏃 SPORTS</div>
+
+          </div>
+        </div>
+
+        <div style="margin-top:12px;color:#7193a6;font-size:11px">
+          Tap the timetable sessions below to turn them into quests and earn XP when completed.
+        </div>
+      </section>
+
+      <!-- ADD SESSION -->
+      <section class="panel">
+        <div class="panel-title">＋ MANAGE TIMETABLE</div>
+
+        <div class="form-grid">
+          <input id="sessionName" placeholder="Session / subject">
+          <select id="sessionDay">
+            <option>Monday</option>
+            <option>Tuesday</option>
+            <option>Wednesday</option>
+            <option>Thursday</option>
+            <option>Friday</option>
+            <option>Saturday</option>
+          </select>
+          <input id="sessionTime" placeholder="10:20 - 11:10">
+          <input id="sessionXP" type="number" min="1" value="20" placeholder="XP">
+        </div>
+
+        <button style="margin-top:9px" onclick="addSession()">ADD TO MY TASKS</button>
+      </section>
+
+      <!-- QUESTS -->
+      <section class="panel">
+        <div class="panel-title">◈ QUEST BOARD</div>
+
+        <input id="questInput" placeholder="Enter a task / quest...">
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="addQuest()">ADD QUEST</button>
+          <button class="secondary" onclick="addDemoTasks()">ADD DEMO TASKS</button>
+          <button class="danger" onclick="resetSystem()">RESET SYSTEM</button>
+        </div>
+
+        <div id="quests"></div>
+      </section>
+
+    </main>
+
+    <!-- RIGHT SIDE -->
+    <aside>
+
+      <section class="panel">
+        <div class="side-title">◈ PLAYER STATUS</div>
+
+        <div class="metric"><span>LEVEL</span><span id="level">1</span></div>
+        <div class="metric"><span>RANK</span><span id="rank">E</span></div>
+        <div class="metric"><span>COMPLETED</span><span id="completedTotal">0</span></div>
+        <div class="metric"><span>TOTAL XP</span><span id="totalXp">0</span></div>
+
+        <div style="margin-top:12px;font-size:12px;color:#7193a6">
+          XP <span style="float:right"><span id="xp">0</span> / <span id="xpNeeded">100</span></span>
+        </div>
+        <div class="mini-xp" style="height:10px;margin-top:7px">
+          <div id="xpbar"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="side-title">◈ STATS</div>
+
+        <div class="stats">
+          <div class="stat">💪 STR <b id="strength">1</b></div>
+          <div class="stat">⚡ AGI <b id="agility">1</b></div>
+          <div class="stat">🧠 INT <b id="intelligence">1</b></div>
+          <div class="stat">❤️ END <b id="endurance">1</b></div>
+        </div>
+
+        <div style="margin-top:12px;font-size:11px;color:#7193a6">
+          Every level currently grants +1 to all four stats.
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="side-title">◈ QUICK ACTIONS</div>
+
+        <button style="width:100%;margin-bottom:8px" onclick="addQuest('Focus Study Session',30)">
+          + FOCUS SESSION
+        </button>
+
+        <button class="secondary" style="width:100%;margin-bottom:8px" onclick="addDemoTasks()">
+          + DEMO QUESTS
+        </button>
+
+        <button class="danger" style="width:100%" onclick="resetSystem()">
+          RESET SYSTEM
+        </button>
+      </section>
+
+    </aside>
+
+  </div>
+
+  <div class="footer">DISCIPLINE • FOCUS • GROWTH &nbsp; // &nbsp; JINWOO SYSTEM v1.0</div>
+</div>
+
+<script>
+const SAVE_KEY = "jinwooSystemComplete_v2";
+
+let state = {
+  level:1,
+  xp:0,
+  totalXp:0,
+  stats:{
+    strength:1,
+    agility:1,
+    intelligence:1,
+    endurance:1
+  },
+  quests:[],
+  completedTotal:0
+};
+
+function saveState(){
+  localStorage.setItem(SAVE_KEY,JSON.stringify(state));
+}
+
+function loadState(){
+  const saved=localStorage.getItem(SAVE_KEY);
+  if(!saved)return;
+
+  try{
+    const parsed=JSON.parse(saved);
+    state={
+      ...state,
+      ...parsed,
+      stats:{...state.stats,...(parsed.stats||{})},
+      quests:Array.isArray(parsed.quests)?parsed.quests:[]
+    };
+  }catch(e){
+    console.log("Could not load save.");
+  }
+}
+
+function xpNeededForCurrentLevel(){
+  return 100 + ((state.level-1)*150);
+}
+
+function addXP(amount){
+  state.xp+=Number(amount||0);
+  state.totalXp+=Number(amount||0);
+
+  let leveledUp=false;
+
+  while(state.xp>=xpNeededForCurrentLevel()){
+    state.xp-=xpNeededForCurrentLevel();
+    state.level++;
+
+    state.stats.strength++;
+    state.stats.agility++;
+    state.stats.intelligence++;
+    state.stats.endurance++;
+
+    leveledUp=true;
+  }
+
+  saveState();
+  update();
+
+  if(leveledUp)showLevelUp();
+}
+
+function addQuest(customName=null,customXP=20){
+  const input=document.getElementById("questInput");
+
+  const name=customName!==null?customName:input.value.trim();
+
+  if(!name){
+    showNotice("ENTER A TASK FIRST");
+    return;
+  }
+
+  state.quests.push({
+    id:Date.now()+Math.random(),
+    name:name,
+    xp:Number(customXP)||20,
+    completed:false,
+    completedAt:null
+  });
+
+  if(customName===null)input.value="";
+
+  saveState();
+  update();
+  showNotice("NEW QUEST REGISTERED");
+}
+
+function completeQuest(id){
+  const quest=state.quests.find(q=>q.id===id);
+  if(!quest||quest.completed)return;
+
+  quest.completed=true;
+  quest.completedAt=new Date().toLocaleString();
+  state.completedTotal++;
+
+  saveState();
+  update();
+
+  showNotice("QUEST COMPLETE  +"+quest.xp+" XP");
+  addXP(quest.xp);
+}
+
+function undoQuest(id){
+  const quest=state.quests.find(q=>q.id===id);
+  if(!quest||!quest.completed)return;
+
+  quest.completed=false;
+  quest.completedAt=null;
+
+  recalculateProgress();
+  saveState();
+  update();
+
+  showNotice("QUEST MARKED INCOMPLETE");
+}
+
+function deleteQuest(id){
+  state.quests=state.quests.filter(q=>q.id!==id);
+  recalculateProgress();
+  saveState();
+  update();
+  showNotice("QUEST REMOVED");
+}
+
+function recalculateProgress(){
+  const completedXP=state.quests
+    .filter(q=>q.completed)
+    .reduce((sum,q)=>sum+Number(q.xp||0),0);
+
+  state.totalXp=completedXP;
+  state.completedTotal=state.quests.filter(q=>q.completed).length;
+
+  state.level=1;
+  state.xp=completedXP;
+
+  state.stats={
+    strength:1,
+    agility:1,
+    intelligence:1,
+    endurance:1
+  };
+
+  while(state.xp>=xpNeededForCurrentLevel()){
+    state.xp-=xpNeededForCurrentLevel();
+    state.level++;
+
+    state.stats.strength++;
+    state.stats.agility++;
+    state.stats.intelligence++;
+    state.stats.endurance++;
+  }
+}
+
+function addSession(){
+  const name=document.getElementById("sessionName").value.trim();
+  const day=document.getElementById("sessionDay").value;
+  const time=document.getElementById("sessionTime").value.trim();
+  const xp=document.getElementById("sessionXP").value;
+
+  if(!name||!time){
+    showNotice("ENTER SESSION NAME AND TIME");
+    return;
+  }
+
+  addQuest(day+" • "+name+" • "+time,Number(xp)||20);
+
+  document.getElementById("sessionName").value="";
+  document.getElementById("sessionTime").value="";
+  document.getElementById("sessionXP").value=20;
+
+  showNotice("SESSION ADDED TO QUEST BOARD");
+}
+
+function renderQuests(){
+  const container=document.getElementById("quests");
+  container.innerHTML="";
+
+  if(state.quests.length===0){
+    container.innerHTML='<div class="empty">No quests registered.<br>Create a task or add a timetable session.</div>';
+    return;
+  }
+
+  state.quests.forEach(quest=>{
+    const item=document.createElement("div");
+    item.className="quest"+(quest.completed?" completed":"");
+
+    const left=document.createElement("div");
+    left.className="quest-name";
+
+    const name=document.createElement("div");
+    name.textContent=quest.name;
+
+    const meta=document.createElement("div");
+    meta.className="quest-meta";
+    meta.textContent=quest.completed
+      ?"Completed "+quest.completedAt
+      :"Reward: "+quest.xp+" XP";
+
+    left.appendChild(name);
+    left.appendChild(meta);
+
+    const actions=document.createElement("div");
+    actions.className="task-actions";
+
+    if(quest.completed){
+      const done=document.createElement("span");
+      done.className="completed-mark";
+      done.textContent="✓ COMPLETE";
+      actions.appendChild(done);
+
+      const undo=document.createElement("button");
+      undo.className="secondary";
+      undo.textContent="UNDO";
+      undo.onclick=()=>undoQuest(quest.id);
+      actions.appendChild(undo);
+    }else{
+      const complete=document.createElement("button");
+      complete.className="complete";
+      complete.textContent="COMPLETE +"+quest.xp+" XP";
+      complete.onclick=()=>completeQuest(quest.id);
+      actions.appendChild(complete);
+    }
+
+    const del=document.createElement("button");
+    del.className="danger";
+    del.textContent="DELETE";
+    del.onclick=()=>deleteQuest(quest.id);
+    actions.appendChild(del);
+
+    item.appendChild(left);
+    item.appendChild(actions);
+    container.appendChild(item);
+  });
+}
+
+function update(){
+  const needed=xpNeededForCurrentLevel();
+  const percent=Math.min(100,(state.xp/needed)*100);
+
+  document.getElementById("level").textContent=state.level;
+  document.getElementById("miniLevel").textContent=state.level;
+  document.getElementById("xp").textContent=state.xp;
+  document.getElementById("xpNeeded").textContent=needed;
+  document.getElementById("miniXpText").textContent=state.xp+" / "+needed;
+
+  document.getElementById("strength").textContent=state.stats.strength;
+  document.getElementById("agility").textContent=state.stats.agility;
+  document.getElementById("intelligence").textContent=state.stats.intelligence;
+  document.getElementById("endurance").textContent=state.stats.endurance;
+
+  document.getElementById("completedTotal").textContent=state.completedTotal;
+  document.getElementById("totalXp").textContent=state.totalXp;
+
+  document.getElementById("xpbar").style.width=percent+"%";
+  document.getElementById("miniXp").style.width=percent+"%";
+
+  let rank="E";
+  if(state.level>=5)rank="D";
+  if(state.level>=10)rank="C";
+  if(state.level>=20)rank="B";
+  if(state.level>=35)rank="A";
+  if(state.level>=50)rank="S";
+
+  document.getElementById("rank").textContent=rank;
+
+  renderQuests();
+}
+
+function showLevelUp(){
+  document.getElementById("newLevel").textContent=state.level;
+  document.getElementById("levelUpScreen").style.display="flex";
+}
+
+function closeLevelUp(){
+  document.getElementById("levelUpScreen").style.display="none";
+}
+
+function showNotice(message){
+  const notice=document.getElementById("notice");
+  notice.textContent="[ SYSTEM ]  "+message;
+  notice.style.display="block";
+
+  clearTimeout(window.noticeTimer);
+
+  window.noticeTimer=setTimeout(()=>{
+    notice.style.display="none";
+  },2500);
+}
+
+function addDemoTasks(){
+  addQuest("Study C++",20);
+  addQuest("Complete assignment",20);
+  addQuest("Workout",20);
+  addQuest("Read for 30 minutes",20);
+  addQuest("Practice coding",20);
+  showNotice("DEMO QUESTS ADDED");
+}
+
+function resetSystem(){
+  const ok=confirm(
+    "RESET THE ENTIRE SYSTEM?\n\nThis will delete your level, XP, stats and quests."
+  );
+
+  if(!ok)return;
+
+  localStorage.removeItem(SAVE_KEY);
+
+  state={
+    level:1,
+    xp:0,
+    totalXp:0,
+    stats:{
+      strength:1,
+      agility:1,
+      intelligence:1,
+      endurance:1
+    },
+    quests:[],
+    completedTotal:0
+  };
+
+  update();
+  showNotice("SYSTEM RESET COMPLETE");
+}
+
+document.getElementById("questInput").addEventListener("keydown",function(e){
+  if(e.key==="Enter")addQuest();
+});
+
+loadState();
+update();
+</script>
+
+</body>
+</html>
